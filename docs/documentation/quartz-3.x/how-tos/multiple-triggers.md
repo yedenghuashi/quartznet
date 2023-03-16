@@ -59,22 +59,22 @@ You could even set common data parameters on the job itself. Here
 we are adding some job data to the job itself.
 
 ```csharp
-public Task DoSomething(IScheduler schedule, CancellationToken ct)
+public async Task DoSomething(IScheduler scheduler, CancellationToken ct)
 {
     var job = JobBuilder.Create<AnExampleJob>()
                         .WithIdentity(HelloJob.Key)
                         .UsingJobData("batch-size", "50")
                         .Build();
     
-    await schedule.AddJob(job, replace: true, storeNonDurableWhileAwaitingScheduling: true, ct);
+    await scheduler.AddJob(job, replace: true, storeNonDurableWhileAwaitingScheduling: true, ct);
 
     // Trigger 1
     var jobData1 = new JobDataMap { { "CustomerId", 1 } };
-    await scheduler.TriggerJob(HelloJob.Key), jobData1, ct);
+    await scheduler.TriggerJob(HelloJob.Key, jobData1, ct);
 
     // Trigger 2
     var jobData2 = new JobDataMap { { "CustomerId", 2 } };
-    await scheduler.TriggerJob(HelloJob.Key), jobData2, ct);
+    await scheduler.TriggerJob(HelloJob.Key, jobData2, ct);
 }
 ```
 
